@@ -19,29 +19,41 @@ start:
     mov si, hello_msg
 
 
-print_char:
+
+ ;loading kernel
+    mov ax, 0x0000
+    mov es, ax
+    mov bx , 0x8000
+
+    mov ah,0x02
+    mov al,1
+    mov ch,0
+    mov cl,2
+    mov dh,0
+    int 0x13
+
+    jc disk_error
+
+    jmp 0x0000:0x8000
+
+disk_error:
+    mov si, erro_msg
+    call print_string
+    jmp .halt
+
+print_string:
+
   lodsb
   cmp al,0
-  je wait_key
+  je .done
   mov ah, 0x0E
   mov bh, 0x00
   mov bl, 0x0D
   int 0x10
-  jmp print_char
+  jmp print_string
 
-wait_key:
- ;loading kernel
-  mov ax, 0x0000
-  mov es, ax
-  mov bx , 0x8000
-  mov ah,0x02
-  mov al,1
-  mov ch,0
-  mov cl,2
-  mov dh,0
-  int 0x13
-  jmp 0x0000:0x8000
-
+.done:
+    ret
 
 .halt:
 
@@ -50,9 +62,9 @@ wait_key:
   jmp .halt
 
 hello_msg db "hello from lagro v0.01",ENDL,0
-key db 0
+error_msg db "disk error",ENDL,0
 
 
 times 510 - ($ - $$) db 0
 
-dw 0AA55h
+dw 0AA55

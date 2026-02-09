@@ -22,15 +22,16 @@ start:
     mov si, msg
     call print_string
 
-    mov ax, 0xB800
-    mov es, ax
+    mov al, 0x01
+    mov cx, 0x0607
+    int 0x10
+
+ command_loop:
+    mov si, prompt
 
 
 
-    ;mov di, 0
-    ;mov al, 'M'
-    ;mov ah, 0x4F
-    ;stosw
+
 
 
 hang:
@@ -42,23 +43,13 @@ hang:
 print_string:
     lodsb
     cmp al, 0
-    je done
+    je .done
     mov ah, 0x0E
     int 0x10
     jmp print_string
 
-done:
+.done:
     ret
-
-print_color:
-    lodsb
-    cmp al,0
-    je done
-    mov ah, 0x04
-    add di,2
-    stosw
-
-    jmp print_color
 
 msg  db "kernel working",ENDL , 0
 msg_2 db "tedting" ,0
