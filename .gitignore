@@ -1,0 +1,15 @@
+#Build
+build/
+
+#Editor file
+
+*.swp
+*.swo
+*~
+
+#Qemu junk
+
+*.log
+
+#Os image
+*.bin
