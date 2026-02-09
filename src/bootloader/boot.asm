@@ -17,7 +17,7 @@ start:
     sti  ;interuping back again
 
     mov si, hello_msg
-
+    call print_string
 
 
  ;loading kernel
@@ -36,11 +36,6 @@ start:
 
     jmp 0x0000:0x8000
 
-disk_error:
-    mov si, erro_msg
-    call print_string
-    jmp .halt
-
 print_string:
 
   lodsb
@@ -55,6 +50,12 @@ print_string:
 .done:
     ret
 
+disk_error:
+    mov si, error_msg
+    call print_string
+    jmp .halt
+
+
 .halt:
 
   cli
@@ -67,4 +68,4 @@ error_msg db "disk error",ENDL,0
 
 times 510 - ($ - $$) db 0
 
-dw 0AA55
+dw 0AA55h
