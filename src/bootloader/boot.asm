@@ -86,7 +86,7 @@ DATA_SEG equ date_descriptor - Gdt_START
 
 call switch_to_pm
 
-  jmp CODE_SEG:init_pm
+  jmp CODE_SEG:init_pm; far jump to init_pm
 
 [bits 32]
 init_pm:
@@ -105,7 +105,7 @@ init_pm:
   
   jmp 0x8000
 
-print_pm:
+print_pm:; helper function for 16 bits
   pusha
   mov ebx, 0x7C00
   .loop:
@@ -124,11 +124,11 @@ print_pm:
 
 
 
-      
+;strings      
 hello_msg db "hello from lagro v0.01",ENDL,0
 error_msg db "disk error",ENDL,0
 welcome_pm db "welcome to protected mode",ENDL,0 
-
+;resevering a 512 bits
 times 510 - ($ - $$) db 0
 
 dw 0AA55h
