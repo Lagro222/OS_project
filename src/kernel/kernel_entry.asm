@@ -3,5 +3,5 @@ org 0x8000
 bits 32
 
 start:
-  call kmain
+  call kernel_main
   jmp $   
