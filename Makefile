@@ -57,7 +57,7 @@ $(Image): $(BOOT_BIN) $(KERNEL_BIN)
 	cat $^ > $@
 
 run: $(Image)
-	$(QEMU) -drive format=raw,file=$(Image)
+	$(QEMU) -fda $(Image)
 
 #cLean
 cLean:
