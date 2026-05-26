@@ -1,7 +1,9 @@
-org 0x8000
+[bits 32]
 
-bits 32
 
+
+global _start
 _start:
-  call kernel_main
-  jmp $   
+  mov byte [0xB8005],'V'
+  mov byte [0xB8006], 0x0F
+ 
