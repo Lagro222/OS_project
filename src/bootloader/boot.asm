@@ -18,19 +18,14 @@ start:
     
     sti
     
-
-
     mov [BOOT_DRIVER], dl
 
     ;clear screen
     mov ax,0x0003
     int 0x10
 
-
-
-
-    mov si, hello_msg
-    call print_16
+     mov si, hello_msg
+     call print_16
 
  load_kerel:
  ;loading kernel
@@ -112,10 +107,13 @@ init_pm:
 
   ;mov ebx,welcome_pm
   ;call print_pm
-  mov byte [0xB8000 + 0x1E0] , 'L'
-  mov byte [0xB8001 + 0x1E0] , 0x4F
-  mov byte [0xB8002 + 0x1E0] , 'A'
-  mov byte [0xB8003 + 0x1E0] , 0x0F
+  ; mov byte [0xB8000 + 0x1E0] , 'L'
+  ; mov byte [0xB8001 + 0x1E0] , 0x4F
+  ; mov byte [0xB8002 + 0x1E0] , 'A'
+  ; mov byte [0xB8003 + 0x1E0] , 0x0F
+  ;
+  mov ebx,protected_mode
+  call print_string_32
 
   ;jmp 0x10000
 
@@ -123,6 +121,25 @@ halt:
   hlt
   jmp halt
 
+print_string_32:
+  pusha
+  mov  edi, 0xB8002 + 0x1E0 ;address of writing
+  .loop:
+    mov al, [ebx];load caracter from string
+    cmp al, 0
+    je .done
+    
+    mov ah, 0x0F
+    mov [edi], ax
+    
+    inc ebx
+    add edi ,2
+    jmp .loop
+   
+
+  .done:
+      popa
+      ret
 
 [bits 16]
 print_16:; helper function for 16 bits
@@ -148,7 +165,8 @@ disk_error:
 ;strings      
 hello_msg db "hello from lagro v0.01",ENDL,0
 error_msg db "disk error",ENDL,0
-welcome_pm db "welcome to protected mode",ENDL,0 
+welcome_pm db "welcome to protected mode",ENDL,0
+protected_mode db "protected mode working !!",ENDL,0
 ;resevering a 512 bits
 times 510 - ($ - $$) db 0
 
