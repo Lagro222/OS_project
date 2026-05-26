@@ -115,7 +115,7 @@ init_pm:
   mov ebx,protected_mode
   call print_string_32
 
-  ;jmp 0x10000
+  jmp 0x10000
 
 halt:
   hlt
