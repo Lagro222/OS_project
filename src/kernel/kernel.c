@@ -1,6 +1,6 @@
 void print(char *str){
   
-  char *vga = (char*)0xB8000;
+  char *vga = (char*)0xB8000 + ( 5 * 160) ;
   int i = 0;
 
   while (str[i] != '\0') {

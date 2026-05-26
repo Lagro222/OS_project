@@ -1,9 +1,7 @@
 [bits 32]
 
-
-
+extern kernel_main 
 global _start
 _start:
-  mov byte [0xB8005],'V'
-  mov byte [0xB8006], 0x0F
- 
+  call kernel_main
+  jmp $ 
