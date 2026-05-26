@@ -1,6 +1,17 @@
-#include <stdio.h>
+void print(char *str){
+  
+  char *vga = (char*)0xB8000;
+  int i = 0;
 
-void kernel_main(){
+  while (str[i] != '\0') {
+      vga[i*2] = str[i];
+      vga[i*2 + 1] = 0x0F;
+      i++;
+  }
+}
 
-  printf("hello from kernel C");
+extern void kernel_main(){
+
+  print("hello world");
+  while (1) { }
 }
