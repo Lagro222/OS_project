@@ -8,12 +8,7 @@ DATA_SEG equ 0x10
 
 BOOT_DRIVER db 0
 start:
-    mov [BOOT_DRIVER], dl
-
-    ;clear screen
-    mov ax,0x0003
-    int 0x10
-   
+       
     cli ; stop interuping
     xor ax,ax ; ax = 0
     mov ds, ax
@@ -21,10 +16,21 @@ start:
     mov ss,ax 
     mov sp,0x7C00 ;stack start from 0x7C00
     
+    sti
     
-    mov si, hello_msg
-    call print_pm
 
+
+    mov [BOOT_DRIVER], dl
+
+    ;clear screen
+    mov ax,0x0003
+    int 0x10
+
+
+
+
+    mov si, hello_msg
+    call print_16
 
  load_kerel:
  ;loading kernel
@@ -44,7 +50,7 @@ start:
     jc disk_error
 
     mov si,welcome_pm
-    call print_pm
+    call print_16
 
 switch_to_pm:
   cli 
@@ -56,7 +62,7 @@ switch_to_pm:
   jmp CODE_SEG:init_pm
 ; creating GDT
 
-align 8
+
 
 Gdt_START:
     
@@ -106,18 +112,21 @@ init_pm:
 
   ;mov ebx,welcome_pm
   ;call print_pm
-  mov byte [0xB8000] , 'L'
-  mov byte [0xB8001] , 0x4F
-  mov byte [0xB8002] , 'A'
-  mov byte [0xB8003] , 0x0F
+  mov byte [0xB8000 + 0x1E0] , 'L'
+  mov byte [0xB8001 + 0x1E0] , 0x4F
+  mov byte [0xB8002 + 0x1E0] , 'A'
+  mov byte [0xB8003 + 0x1E0] , 0x0F
 
+  ;jmp 0x10000
 
-  jmp 0x10000
+halt:
+  hlt
+  jmp halt
+
 
 [bits 16]
-print_pm:; helper function for 16 bits
+print_16:; helper function for 16 bits
   pusha
-  mov ebx, 0x7C00
   .loop:
       lodsb
       cmp al, 0
@@ -133,9 +142,8 @@ print_pm:; helper function for 16 bits
 
 disk_error:
   mov si, error_msg
-  call print_pm
+  call print_16
   jmp $
-
 
 ;strings      
 hello_msg db "hello from lagro v0.01",ENDL,0
