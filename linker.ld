@@ -5,15 +5,27 @@ SECTIONS
   . =0x10000;
 
   .text : {
-      *(.text)
-}
+      *(.text*)
+  }
+
+  .rodata : {
+    *(.rodata*)
+  }
 
   .data : {
 
-   *(.data) 
-}
+   *(.data*) 
+  }
+
   .bss : {
-    *(.bss)
+    *(.bss*)
+    *(COMMON)
+  }
+
+ /DISCARD/ : {
+  *(.note.GNU-stack)
+  *(.gnu_eh_frame)
+  *(.gnu.hash)
+ }
 }
 
-}
