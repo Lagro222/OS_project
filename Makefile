@@ -68,11 +68,11 @@ $(Image): $(BOOT_BIN) $(KERNEL_BIN)
 	cat $^ > $@
 
 run: $(Image)
-	$(QEMU) -fda $(Image)
+	$(QEMU) -fda $(Image) 
 
 #cLean
-cLean:
-	rm -rf $(OUT) $(BIN)
+cLean: $(BIN) $(OUT)
+	rm -rf $^
 
 
 
