@@ -7,5 +7,6 @@ extern void kernel_main(){
   print("hello world");
   print("hello from lagro after clear screen");
   print("hello again !!");
+  print_at("printing in position ", 6, 3);
   while (1) { }
 }

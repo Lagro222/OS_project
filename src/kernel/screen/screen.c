@@ -17,7 +17,10 @@ void init_print(){
 
 }
 
-
+bool is_clear(char* vga_at){
+  if ( vga_at[0] == ' ' || vga_at[1] == 0 ) return true;
+  return false;
+}
 
 void print_string_position(char* str,char* vga_pos){
   int i = 0;
@@ -28,6 +31,12 @@ void print_string_position(char* str,char* vga_pos){
       i++;
   }
 }
+
+void print_at(char* str, int row, int col){
+   char* vga_pos = vga + ( ( row * 80 + col) * 2);
+   if (is_clear(vga_pos)) print_string_position(str,vga_pos);
+}
+
 
 void print(char *str){
         char* vga_pos = vga + ( current_line * 80 * 2);
