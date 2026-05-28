@@ -123,7 +123,7 @@ halt:
 
 print_string_32:
   pusha
-  mov  edi, 0xB8002 + 0x1E0 ;address of writing
+  mov  edi, 0xB8000 + (3 * 80 * 2) ;address of writing
   .loop:
     mov al, [ebx];load caracter from string
     cmp al, 0

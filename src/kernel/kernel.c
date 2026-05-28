@@ -1,8 +1,11 @@
 #include "screen/screen.h"
 
 extern void kernel_main(){
-
-  print("hello world");
+  
   //clear_screen();
+  init_print();
+  print("hello world");
+  print("hello from lagro after clear screen");
+  print("hello again !!");
   while (1) { }
 }

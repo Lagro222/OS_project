@@ -1,16 +1,38 @@
 #include "screen.h"
+#include <stdbool.h>
+char* vga = (char*)0xB8000 ;
+int current_line = 0;
 
-char *vga = (char*)0xB8000;
+void init_print(){
+     
+  for (int i = 0; i < 25; i++) {
+      char* line_pos = vga + ( i * 80 * 2 );
+      if( line_pos[0] == ' ' || line_pos[1] == 0 ){
+        current_line = i ;
+        return;
+      }
+      
+  }
+  current_line = 0 ;
 
-void print(char *str){
-  char *show_str = vga + ( 5 * 160);
-    int i = 0;
-  
+}
+
+
+
+void print_string_position(char* str,char* vga_pos){
+  int i = 0;
+   
   while (str[i] != '\0') {
-      show_str[i*2]  = str[i];
-      show_str[i*2 + 1] = 0x0F;
+      vga_pos[i*2]  = str[i];
+      vga_pos[i*2 + 1] = 0x0F;
       i++;
   }
+}
+
+void print(char *str){
+        char* vga_pos = vga + ( current_line * 80 * 2);
+       print_string_position(str,vga_pos);
+       current_line++; 
 }
 
 void clear_screen(){
@@ -23,4 +45,5 @@ void clear_screen(){
         vga_clr[1] = 0x00;
       }
     }
+    
 }
