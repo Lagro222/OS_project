@@ -1,7 +1,12 @@
 #include "screen.h"
 #include <stdbool.h>
+
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
+int cursor_x= 0;
+int cursor_y = 0;
+// bool is_control_char = true;
+// bool is_newline = false;
 
 void init_print(){
      
@@ -14,6 +19,53 @@ void init_print(){
       
   }
   current_line = 0 ;
+
+}
+
+// void put_blank( int row , int column){
+//     char* vga_at = vga + ( row * 80 + column) * 2;
+//     vga_at[0] = ' ';
+//     vga_at[1] = 0 ; 
+// }
+//
+
+bool control_char(char c){
+    
+  switch (c) {
+      case '\n':
+        cursor_y++;
+        cursor_x = 0 ;
+        return true;
+      case '\t':
+          cursor_x += 4;
+          return true;
+      case '\r':
+        cursor_x = 0;
+        return true;
+      case '\b':
+        if ( cursor_x > 0 ) cursor_x--;
+        return true;
+      default:
+        return false;
+    }
+    
+}
+
+
+void put_char(char c){
+          
+    if(control_char(c)) return;
+    char* vga_at =  vga + ( ( cursor_y * 80 + cursor_x ) * 2 ) ;
+    vga_at[0] = c;
+    vga_at[1] = 0x0F;
+    cursor_x++;
+          
+    if (cursor_x >= 80 ){ 
+            cursor_y++;
+            cursor_x = 0;
+    }
+
+
 
 }
 
