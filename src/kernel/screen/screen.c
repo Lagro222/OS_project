@@ -13,12 +13,12 @@ void init_print(){
   for (int i = 0; i < 25; i++) {
       char* line_pos = vga + ( i * 80 * 2 );
       if( line_pos[0] == ' ' || line_pos[1] == 0 ){
-        current_line = i ;
+        cursor_y = i ;
         return;
       }
       
   }
-  current_line = 0 ;
+  cursor_y = 0 ;
 
 }
 
@@ -91,9 +91,14 @@ void print_at(char* str, int row, int col){
 
 
 void print(char *str){
-        char* vga_pos = vga + ( current_line * 80 * 2);
-       print_string_position(str,vga_pos);
-       current_line++; 
+       //  char* vga_pos = vga + ( current_line * 80 * 2);
+       // print_string_position(str,vga_pos);
+       // current_line++;
+       int i = 0;
+       while (str[i] != '\0') {
+            put_char(str[i]);
+            i++;
+       }
 }
 
 void clear_screen(){
