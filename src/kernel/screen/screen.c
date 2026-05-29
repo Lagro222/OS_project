@@ -22,12 +22,12 @@ void init_print(){
 
 }
 
-// void put_blank( int row , int column){
-//     char* vga_at = vga + ( row * 80 + column) * 2;
-//     vga_at[0] = ' ';
-//     vga_at[1] = 0 ; 
-// }
-//
+void put_blank( int row , int column){
+    char* vga_at = vga + ( row * 80 + column) * 2;
+    vga_at[0] = ' ';
+    vga_at[1] = 0 ; 
+}
+
 
 bool control_char(char c){
     
@@ -91,9 +91,6 @@ void print_at(char* str, int row, int col){
 
 
 void print(char *str){
-       //  char* vga_pos = vga + ( current_line * 80 * 2);
-       // print_string_position(str,vga_pos);
-       // current_line++;
        int i = 0;
        while (str[i] != '\0') {
             put_char(str[i]);
@@ -105,11 +102,10 @@ void clear_screen(){
   
     for(int i = 0 ; i < 24 ; i++ ){
       for (int j = 0; j < 79 ; j++) {
-        
-        char* vga_clr = vga + (i * 80 + j) * 2;
-        vga_clr[0] = ' ';
-        vga_clr[1] = 0x00;
+        put_blank(i, j);          
       }
     }
+    cursor_x = 0 ;
+    cursor_y = 0 ;
     
 }
