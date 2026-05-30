@@ -1,5 +1,4 @@
 #include "screen.h"
-#include <linux/limits.h>
 #include <stdbool.h>
 
 char* vga = (char*)0xB8000 ;
