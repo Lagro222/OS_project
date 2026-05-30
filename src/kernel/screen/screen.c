@@ -61,9 +61,14 @@ void put_char_at_(char c,Cursor_Pos cur_pos){
     int temp_x = cursor_x + cur_pos.x;
     int temp_y = cursor_y + cur_pos.y;
     int temp = cursor_x;
-    if(cur_pos.y > 0 && cur_pos.x == 0) {
+
+    if(cur_pos.y > 0 && cur_pos.x >= 0) {
+      
       temp_x -= cursor_x ;
       cursor_x = temp;
+
+    }else if (cur_pos.x > 0 ) {
+        temp_x = cur_pos.x;  
     }else {
        cursor_x++;
     }
@@ -77,8 +82,6 @@ void put_char_at_(char c,Cursor_Pos cur_pos){
             cursor_y++;
             cursor_x = 0;
     }
-
-
 
 }
 
