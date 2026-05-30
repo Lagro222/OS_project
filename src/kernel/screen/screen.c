@@ -1,4 +1,5 @@
 #include "screen.h"
+#include <linux/limits.h>
 #include <stdbool.h>
 
 char* vga = (char*)0xB8000 ;
@@ -7,6 +8,7 @@ int cursor_x= 0;
 int cursor_y = 0;
 // bool is_control_char = true;
 // bool is_newline = false;
+
 
 void init_print(){
      
@@ -52,13 +54,24 @@ bool control_char(char c){
 }
 
 
-void put_char(char c){
-          
+void put_char_at_(char c,Cursor_Pos cur_pos){
+    
     if(control_char(c)) return;
-    char* vga_at =  vga + ( ( cursor_y * 80 + cursor_x ) * 2 ) ;
+
+    int temp_x = cursor_x + cur_pos.x;
+    int temp_y = cursor_y + cur_pos.y;
+    int temp = cursor_x;
+    if(cur_pos.y > 0 && cur_pos.x == 0) {
+      temp_x -= cursor_x ;
+      cursor_x = temp;
+    }else {
+       cursor_x++;
+    }
+  
+    char* vga_at =  vga +  ( temp_y * 80 + temp_x ) * 2  ;
     vga_at[0] = c;
     vga_at[1] = 0x0F;
-    cursor_x++;
+   
           
     if (cursor_x >= 80 ){ 
             cursor_y++;
@@ -74,26 +87,25 @@ bool is_clear(char* vga_at){
   return false;
 }
 
-void print_string_position(char* str,char* vga_pos){
+void print_string_position(char* str,Cursor_Pos cur_pos){
   int i = 0;
    
   while (str[i] != '\0') {
-      vga_pos[i*2]  = str[i];
-      vga_pos[i*2 + 1] = 0x0F;
+      put_char_at(str[i], cur_pos.y,cursor_x + i );
       i++;
   }
 }
 
-void print_at(char* str, int row, int col){
-   char* vga_pos = vga + ( ( row * 80 + col) * 2);
-   if (is_clear(vga_pos)) print_string_position(str,vga_pos);
-}
+// void print_at(char* str, Cursor_Pos ){
+//    char* vga_pos = vga + ( ( row * 80 + col) * 2);
+//    if (is_clear(vga_pos)) print_string_position(str,vga_pos);
+// }
 
 
 void print(char *str){
        int i = 0;
        while (str[i] != '\0') {
-            put_char(str[i]);
+            put_char_at(str[i]);
             i++;
        }
 }
