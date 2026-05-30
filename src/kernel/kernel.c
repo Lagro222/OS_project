@@ -17,6 +17,7 @@ extern void kernel_main(){
   put_char_at('K', 1, 1);
   put_char_at('D', .x = 5);
   put_char_at('F');
+  //print_string_position("hello agaaaain ", (Cursor_Pos) { 3 , 2});
    //print("\ttesting\nnew put_char");
   // put_char('I');
   // put_char('\n');

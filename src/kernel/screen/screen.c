@@ -93,7 +93,7 @@ void print_string_position(char* str,Cursor_Pos cur_pos){
   int i = 0;
    
   while (str[i] != '\0') {
-      put_char_at(str[i], cur_pos.y,cursor_x + i );
+      put_char_at(str[i], cur_pos.x + i , cur_pos.y );
       i++;
   }
 }
