@@ -8,7 +8,8 @@ DATA_SEG equ 0x10
 
 BOOT_DRIVER db 0
 start:
-       
+
+
     cli ; stop interuping
     xor ax,ax ; ax = 0
     mov ds, ax
