@@ -1,12 +1,25 @@
 #include "keyboard.h"
+#include "../../hardware/ports.h"
 
-//### TODO : connecting with the keyboard at the port 0x80 
+char read_key(){
+   
+    while (1) {
+      unsigned char status = inb(0x64);
+      if ( status & 0x01 ) break;
+    }
+    unsigned char key = inb(0x60);
+    if ( key & 0x80) return 0;
 
-unsigned char inbyte(unsigned short port){
-    unsigned char result;
- // put the port in the d register : dx and the and al take it , result takes what in the a register a : here we have al; 
-   asm("in %%dx, %%al" : "=a" (result) : "d" (port) );
-  
-   return result;
-  
+    return scan_code(key);
+}
+
+//helper function for ascci
+char scan_code(unsigned char code )  {
+    static char keys[128] = {
+        [0x1E] = 'a',
+        [0x30] = 'b',
+        [0x2E] = 'c',
+        [0x1C] = '\n'
+      };
+    return keys[code];
 }
