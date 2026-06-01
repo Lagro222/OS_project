@@ -111,7 +111,15 @@ void print(char *str){
             i++;
        }
 }
-
+// void print_number(int number){
+//
+//
+// }
+void print_color(char c , char color){
+  char *vga_target = vga + (cursor_y * 80 + cursor_x)*2;
+  vga_target[0] = c;
+  cursor_x++;
+}
 void clear_screen(){
   
     for(int i = 0 ; i < 24 ; i++ ){
