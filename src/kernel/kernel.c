@@ -1,3 +1,4 @@
+#include "drivers/keyboard/keyboard.h"
 #include "screen/screen.h"
 
 extern void kernel_main(){
@@ -22,5 +23,9 @@ extern void kernel_main(){
   // put_char('I');
   // put_char('\n');
   // put_char('T');
-  while (1) { }
+  clear_screen();
+  while (1) {
+    char c = read_key();
+    if( c != 0 ) put_char_at(c);
+  }
 }
