@@ -44,7 +44,9 @@ bool control_char(char c){
         cursor_x = 0;
         return true;
       case '\b':
-        if ( cursor_x > 0 ) cursor_x--;
+        if ( cursor_x >= 0 ) 
+          put_blank(cursor_y, cursor_x);
+          if( cursor_x > 0 ) cursor_x--;
         return true;
       default:
         return false;
