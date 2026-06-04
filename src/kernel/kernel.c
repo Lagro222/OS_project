@@ -5,6 +5,7 @@ extern void kernel_main(){
   
   //clear_screen();
   init_print();
+  init_lines();
   print("hello world\n");
   print("hello from lagro after clear screen\n");
   print("hello\nagain !!\r");
