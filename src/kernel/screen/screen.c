@@ -37,6 +37,16 @@ void init_lines(){
 
 }
 
+void on_newline(){
+    int next = cur_line->line_number + 1;
+    if ( next < MAX_LINES) {
+        cur_line->last_x = cursor_x;
+        cur_line  = &lines[next];
+        cursor_y++;
+        cursor_x = 0;
+    }
+
+}
 
 void put_blank( int row , int column){
     char* vga_at = vga + ( row * 80 + column) * 2;
@@ -46,17 +56,10 @@ void put_blank( int row , int column){
 
 
 bool control_char(char c){
-if (cursor_y == 0) {
-      cur_line->previous = NULL;
-      cur_line->last_x = cursor_x;
-      line->last_x = cursor_x;
- }
+
  switch (c) {
       case '\n': 
-        cursor_y++;
-        cur_line->previous->last_x = cursor_x;
-        cur_line->previous = line;
-        cursor_x = 0 ;
+        on_newline();
         return true;
       case '\t':
           cursor_x += 4;
@@ -66,13 +69,12 @@ if (cursor_y == 0) {
         return true;
       case '\b':
 
-          if(cursor_x == 0){
-            cursor_y--;
-            cursor_x = line->last_x;
+          if(cursor_x == 0 && cur_line->previous != NULL){
+            cursor_y--; 
+            cursor_x = cur_line->previous->last_x;
             cur_line = cur_line->previous;
-            line = line->previous;
           
-          }else if (cursor_x > 0) cursor_x--;
+          }else if (cursor_x > 0){ cursor_x--;}
           put_blank(cursor_y, cursor_x);
           
         return true;
