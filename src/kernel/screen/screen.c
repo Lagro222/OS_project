@@ -1,13 +1,16 @@
 #include "screen.h"
 #include <stdbool.h>
-
+#include <stddef.h>
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
 int cursor_x= 0;
 int cursor_y = 0;
-// bool is_control_char = true;
-// bool is_newline = false;
 
+// bool is_control_char = true;
+//
+// bool is_newline = false;
+Line lines[MAX_LINES];  
+Line *cur_line ;
 
 void init_print(){
      
@@ -23,6 +26,18 @@ void init_print(){
 
 }
 
+void init_lines(){
+      
+  for (int i = 0; i < MAX_LINES ; i++) {
+     lines[i].last_x = 0;
+     lines[i].line_number = i;
+     lines[i].previous = ( i > 0) ? &lines[i - 1] : NULL;
+  }
+  cur_line = &lines[0];
+
+}
+
+
 void put_blank( int row , int column){
     char* vga_at = vga + ( row * 80 + column) * 2;
     vga_at[0] = ' ';
@@ -31,10 +46,16 @@ void put_blank( int row , int column){
 
 
 bool control_char(char c){
-    
-  switch (c) {
-      case '\n':
+if (cursor_y == 0) {
+      cur_line->previous = NULL;
+      cur_line->last_x = cursor_x;
+      line->last_x = cursor_x;
+ }
+ switch (c) {
+      case '\n': 
         cursor_y++;
+        cur_line->previous->last_x = cursor_x;
+        cur_line->previous = line;
         cursor_x = 0 ;
         return true;
       case '\t':
@@ -44,9 +65,16 @@ bool control_char(char c){
         cursor_x = 0;
         return true;
       case '\b':
-        if ( cursor_x >= 0 ) 
+
+          if(cursor_x == 0){
+            cursor_y--;
+            cursor_x = line->last_x;
+            cur_line = cur_line->previous;
+            line = line->previous;
+          
+          }else if (cursor_x > 0) cursor_x--;
           put_blank(cursor_y, cursor_x);
-          if( cursor_x > 0 ) cursor_x--;
+          
         return true;
       default:
         return false;
