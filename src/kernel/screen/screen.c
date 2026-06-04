@@ -3,7 +3,7 @@
 #include <stddef.h>
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
-int cursor_x= 0;
+int cursor_x = 0;
 int cursor_y = 0;
 
 // bool is_control_char = true;
@@ -68,13 +68,16 @@ bool control_char(char c){
         cursor_x = 0;
         return true;
       case '\b':
+        
+        if (cursor_x == 0 && cursor_y == 0) return true; 
 
-          if(cursor_x == 0 && cur_line->previous != NULL){
+        if(cursor_x == 0 && cur_line->previous != NULL){
             cursor_y--; 
             cursor_x = cur_line->previous->last_x;
             cur_line = cur_line->previous;
           
-          }else if (cursor_x > 0){ cursor_x--;}
+          }
+        else if (cursor_x > 0){ cursor_x--;}
           put_blank(cursor_y, cursor_x);
           
         return true;
