@@ -24,9 +24,9 @@ typedef struct {
 //INITS
 void init_print();
 void init_lines();
-//CLEAR
+//ADDITIONS
 void clear_screen();
-
+void type_writer();
 //STRING PRITING
 void print(char* vga);
 void print_at(char* vga, int row , int col);

@@ -1,14 +1,15 @@
 #include "screen.h"
 #include <stdbool.h>
 #include <stddef.h>
+#include "../drivers/keyboard/keyboard.h"
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
 int cursor_x = 0;
 int cursor_y = 0;
-
-// bool is_control_char = true;
-//
-// bool is_newline = false;
+static int blinking = 10;
+static int count = 0;
+static bool cur_visible = true;
+//bool cur_moving = true;
 Line lines[MAX_LINES];  
 Line *cur_line ;
 
@@ -37,6 +38,42 @@ void init_lines(){
 
 }
 
+void put_blank( int row , int column){
+    char* vga_at = vga + ( row * 80 + column) * 2;
+    vga_at[0] = ' ';
+    vga_at[1] = 0 ; 
+}
+
+// void show_cursor(){       
+//   if (cur_visible) {
+//            put_char_at('_');
+//   }
+// }
+//
+// void hide_cursor(){
+//   if (!cur_visible) {
+//   put_char_at(' ');
+//   }
+// }
+void type_writer(){  
+  int temp ; 
+  count++;
+
+  if (count > blinking) {
+      cur_visible = !cur_visible;
+      count = 0;
+  }
+
+  if (cur_visible) {
+      put_char_at('_', cursor_x, cursor_y);
+      temp = cursor_x;
+  }else {
+      put_char_at(' ', temp, cursor_y);
+  }
+         
+    
+}
+
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next < MAX_LINES) {
@@ -48,11 +85,7 @@ void on_newline(){
 
 }
 
-void put_blank( int row , int column){
-    char* vga_at = vga + ( row * 80 + column) * 2;
-    vga_at[0] = ' ';
-    vga_at[1] = 0 ; 
-}
+
 
 
 bool control_char(char c){
@@ -77,9 +110,12 @@ bool control_char(char c){
             cur_line = cur_line->previous;
           
           }
-        else if (cursor_x > 0){ cursor_x--;}
-          put_blank(cursor_y, cursor_x);
-          
+        else if (cursor_x > 0){ 
+          cursor_x--;
+          put_blank(cursor_y, cursor_x++);
+ 
+        }
+                   
         return true;
       default:
         return false;
@@ -91,7 +127,10 @@ bool control_char(char c){
 void put_char_at_(char c,Cursor_Pos cur_pos){
     
     if(control_char(c)) return;
-
+    //
+    // if (c == ' ') {
+    //   cursor_x++;    
+    // }
     int temp_x = cursor_x + cur_pos.x;
     int temp_y = cursor_y + cur_pos.y;
     int temp = cursor_x;

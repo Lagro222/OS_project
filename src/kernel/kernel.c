@@ -1,6 +1,10 @@
 #include "drivers/keyboard/keyboard.h"
 #include "screen/screen.h"
 
+
+
+
+
 extern void kernel_main(){
   
   //clear_screen();
@@ -27,6 +31,11 @@ extern void kernel_main(){
   clear_screen();
   while (1) {
     char c = read_key();
-    if( c != 0 ) put_char_at(c);
+    if (c != 0) {
+      put_char_at(c);
+    }
+    type_writer();
+  
   }
+  
 }
