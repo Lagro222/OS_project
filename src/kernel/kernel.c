@@ -2,7 +2,8 @@
 #include "screen/screen.h"
 #include <stdbool.h>
 
-static bool key_pressed = false;
+//static bool key_pressed = false;
+//static int count = 0;
 
 extern void kernel_main(){
   
@@ -18,16 +19,10 @@ extern void kernel_main(){
   // put_char('T');
   clear_screen();
   while (1) {
+
     char c = read_key();
     if (c != 0) {
-      if (!key_pressed) {
-        put_char(c);  
-        key_pressed = true;
-      }
-     
-    }
-    if (c == 0 && key_pressed) {
-        key_pressed = false;
+      put_char(c);
     }
    type_writer();
   

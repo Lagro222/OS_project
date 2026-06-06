@@ -1,12 +1,11 @@
 #include "keyboard.h"
 #include "../../hardware/ports.h"
-#include "../../screen/screen.h"
+//#include "../../screen/screen.h"
 char read_key(){
    
-    while (1) {
-      unsigned char status = inb(0x64);
-      if ( status & 0x01 ) break;
-    }
+  unsigned char status = inb(0x64);
+   if ( !(status & 0x01 ) ) return 0;
+
     unsigned char key = inb(0x60);
     if ( key & 0x80) return 0;
     // char hex[] = "0x00";
