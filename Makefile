@@ -42,6 +42,11 @@ PORTS = build/ports
 PORTS_O = $(PORTS)/ports.o
 PORTS_C = src/kernel/hardware/ports.c
 
+##string
+STRING = build/string
+STRING_O = $(STRING)/string.o
+STRING_C = src/kernel/utils/string.c
+
 Image = bin/os-image.bin
 
 
@@ -63,6 +68,8 @@ $(KEYBOARD):
 $(PORTS):
 	mkdir -p $(PORTS)
 
+$(STRING):
+	mkdir -p $(STRING)
 #bootloader
 $(BOOT_BIN): $(BOOT_ASM) | $(BIN)
 	$(ASM) -f bin  $< -o $@
@@ -79,11 +86,14 @@ $(PORTS_O): $(PORTS_C) | $(PORTS)
 $(KEYBOARD_O):$(KEYBOARD_C)  | $(KEYBOARD)
 	$(CC) $(CFLAGS) $< -o $@
  
+$(STRING_O):$(STRING_C) | $(STRING)
+	$(CC) $(CFLAGS) $< -o $@
+
 
 $(KERNEL_C_O): $(KERNEL_C) | $(OUT)
 	$(CC) $(CFLAGS) -nostdlib $< -o $@
 
-$(KERNEL_ELF): $(KERNEL_ENTRY_O) $(KERNEL_C_O) $(SCREEN_O) $(KEYBOARD_O) $(PORTS_O)
+$(KERNEL_ELF): $(KERNEL_ENTRY_O) $(KERNEL_C_O) $(STRING_O) $(SCREEN_O) $(KEYBOARD_O) $(PORTS_O) 
 	$(LD) $(LDFlAGS) -o $@ $^
 
 
