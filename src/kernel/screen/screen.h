@@ -34,8 +34,7 @@ void print_string_position(char* str,Cursor_Pos cur_pos);
 
 //CHARACTER PUTS
 void put_char(char c);
-void put_char_at_(char c, Cursor_Pos cur_pos);
-#define put_char_at(c, ...) put_char_at_(c , ( Cursor_Pos ) { __VA_ARGS__}) 
+void put_char_at(char c, int x , int y);
 void print_color(char c , char color);
 
 
