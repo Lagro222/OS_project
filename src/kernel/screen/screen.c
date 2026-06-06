@@ -1,7 +1,7 @@
 #include "screen.h"
 #include <stdbool.h>
 #include <stddef.h>
-
+#include "../utils/string.h"
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
 int cursor_x = 0;
@@ -44,6 +44,12 @@ void put_blank( int row , int column){
     vga_at[1] = 0 ; 
 }
 
+void run_cmd(char* str){
+  if(mystrcmp(str, "clear\n") == 0 ){
+    clear_screen();
+  }
+}
+
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next < MAX_LINES) {
@@ -58,7 +64,8 @@ void on_newline(){
 bool control_char(char c){
 
  switch (c) {
-      case '\n': 
+      case '\n':
+        run_cmd(cur_line->str);
         on_newline();
         return true;
       case '\t':
@@ -75,7 +82,7 @@ bool control_char(char c){
             cursor_y--; 
             cursor_x = cur_line->previous->last_x;
             cur_line = cur_line->previous;
-          
+         
         }
         else if (cursor_x > 0){ 
 
@@ -101,6 +108,7 @@ void put_char(char c){
   char* vga_at = vga + (cursor_y * 80 + cursor_x ) * 2;
   vga_at[0] = c;
   vga_at[1] = 0x0F;
+  cur_line->str[cursor_x] = c;
   cursor_x++;
 }
 

@@ -7,6 +7,7 @@
 typedef struct Line{
     int last_x;
     int line_number;
+    char str[81];
     struct Line *previous;
 }Line;
 
@@ -25,6 +26,7 @@ typedef struct {
 void init_print();
 void init_lines();
 //ADDITIONS
+void run_cmd(char* str);
 void clear_screen();
 void type_writer();
 //STRING PRITING

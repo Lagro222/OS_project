@@ -24,8 +24,7 @@ extern void kernel_main(){
     if (c != 0) {
       put_char(c);
     }
-   type_writer();
-  
+   type_writer(); 
   }
   
 }
