@@ -6,7 +6,7 @@ char* vga = (char*)0xB8000 ;
 int current_line = 0;
 int cursor_x = 0;
 int cursor_y = 0;
-static int blinking = 100;
+static int blinking = 50000;
 static int count = 0;
 static bool cur_visible = true;
 //bool cur_moving = true;
@@ -35,7 +35,6 @@ void init_lines(){
      lines[i].previous = ( i > 0) ? &lines[i - 1] : NULL;
   }
   cur_line = &lines[0];
-
 }
 
 
@@ -105,19 +104,9 @@ void put_char(char c){
   cursor_x++;
 }
 
-// void show_cursor(){       
-//   if (cur_visible) {
-//            put_char_at('_');
-//   }
-// }
-//
-// void hide_cursor(){
-//   if (!cur_visible) {
-//   put_char_at(' ');
-//   }
-// }
 void type_writer(){  
-
+  
+  count++;
 
   if (count > blinking) {
       cur_visible = !cur_visible;
@@ -126,8 +115,9 @@ void type_writer(){
 
   if (cur_visible) {
       put_char('_');
+      cursor_x--;
   }else {
-      put_blank(cursor_y , cursor_x - 1 );
+      put_blank(cursor_y , cursor_x );
   }
          
     
