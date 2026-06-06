@@ -1,7 +1,7 @@
 #include "screen.h"
 #include <stdbool.h>
 #include <stddef.h>
-#include "../drivers/keyboard/keyboard.h"
+
 char* vga = (char*)0xB8000 ;
 int current_line = 0;
 int cursor_x = 0;
@@ -56,7 +56,7 @@ void put_blank( int row , int column){
 //   }
 // }
 void type_writer(){  
-  int temp ; 
+ 
   count++;
 
   if (count > blinking) {
@@ -66,9 +66,8 @@ void type_writer(){
 
   if (cur_visible) {
       put_char_at('_', cursor_x, cursor_y);
-      temp = cursor_x;
   }else {
-      put_char_at(' ', temp, cursor_y);
+      put_blank(cursor_y , cursor_x );
   }
          
     
@@ -84,9 +83,6 @@ void on_newline(){
     }
 
 }
-
-
-
 
 bool control_char(char c){
 
@@ -112,9 +108,9 @@ bool control_char(char c){
           }
         else if (cursor_x > 0){ 
           cursor_x--;
-          put_blank(cursor_y, cursor_x++);
- 
+          put_blank(cursor_y, cursor_x);
         }
+        //put_blank(cursor_y, cursor_x + 1);
                    
         return true;
       default:
@@ -133,23 +129,24 @@ void put_char_at_(char c,Cursor_Pos cur_pos){
     // }
     int temp_x = cursor_x + cur_pos.x;
     int temp_y = cursor_y + cur_pos.y;
-    int temp = cursor_x;
-
-    if(cur_pos.y > 0 && cur_pos.x >= 0) {
-      
-      temp_x -= cursor_x ;
-      cursor_x = temp;
-
-    }else if (cur_pos.x > 0 ) {
-        temp_x = cur_pos.x;  
-    }else {
-       cursor_x++;
-    }
+    // int temp = cursor_x;
+    //
+    // if(cur_pos.y > 0 && cur_pos.x >= 0) {
+    //
+    //   temp_x -= cursor_x ;
+    //   cursor_x = temp;
+    //
+    // }else if (cur_pos.x > 0 ) {
+    //     temp_x = cur_pos.x;  
+    // }else {
+    //    cursor_x++;
+    // }
   
     char* vga_at =  vga +  ( temp_y * 80 + temp_x ) * 2  ;
     vga_at[0] = c;
     vga_at[1] = 0x0F;
-   
+    
+    cursor_x++;
           
     if (cursor_x >= 80 ){ 
             cursor_y++;
@@ -197,7 +194,7 @@ void print_color(char c , char color){
 void clear_screen(){
   
     for(int i = 0 ; i < 24 ; i++ ){
-      for (int j = 0; j < 79 ; j++) {
+      for (int j = 0; j < 80 ; j++) {
         put_blank(i, j);          
       }
     }
