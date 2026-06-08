@@ -49,11 +49,13 @@ void put_blank( int row , int column){
     vga_at[1] = 0 ; 
 }
 
-void run_cmd(char* str){
+bool run_cmd(char* str){
   if(mystrcmp(str, "clear") == 0 ){
     clear_screen();
-    in_clear = true;
+    // in_clear = true;
+    return true;
   }
+ return false;
 }
 
 void on_newline(){
@@ -73,10 +75,11 @@ bool control_char(char c){
 
  switch (c) {
       case '\n':
-        run_cmd(cur_line->str);
-        on_newline();
-        if (in_clear) cursor_y--;
-        in_clear = false;
+        // run_cmd(cur_line->str);
+        // on_newline();
+        // if (in_clear) cursor_y--;
+        // in_clear = false;
+        if (!run_cmd(cur_line->str)) on_newline();
         put_blank(last_cursor_x, last_cursor_y);
         return true;
       case '\t':

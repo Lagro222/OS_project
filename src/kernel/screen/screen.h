@@ -26,7 +26,7 @@ typedef struct {
 void init_print();
 void init_lines();
 //ADDITIONS
-void run_cmd(char* str);
+bool run_cmd(char* str);
 void clear_screen();
 void type_writer();
 //STRING PRITING
