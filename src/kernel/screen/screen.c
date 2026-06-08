@@ -9,6 +9,9 @@ int cursor_y = 0;
 static int blinking = 50000;
 static int count = 0;
 static bool cur_visible = true;
+static int last_cursor_x = 0;
+static int last_cursor_y = 0;
+// static bool is_newline = false;
 //bool cur_moving = true;
 Line lines[MAX_LINES];  
 Line *cur_line ;
@@ -52,9 +55,11 @@ void run_cmd(char* str){
 
 void on_newline(){
     int next = cur_line->line_number + 1;
-    if ( next < MAX_LINES) {
+    if ( next <= MAX_LINES) {
+       //is_newline = true;
         cur_line->last_x = cursor_x;
-        cur_line  = &lines[next];
+        //cur_line->previous = &lines[cur_line->line_number];
+        cur_line  = &lines[next]; 
         cursor_y++;
         cursor_x = 0;
     }
@@ -65,8 +70,9 @@ bool control_char(char c){
 
  switch (c) {
       case '\n':
-        run_cmd(cur_line->str);
+        //run_cmd(cur_line->str);
         on_newline();
+        put_blank(last_cursor_x, last_cursor_y);
         return true;
       case '\t':
           cursor_x += 4;
@@ -79,6 +85,7 @@ bool control_char(char c){
         if (cursor_x == 0 && cursor_y == 0) return true; 
 
         if(cursor_x == 0 && cur_line->previous != NULL){
+            put_blank(cursor_y, cursor_x);
             cursor_y--; 
             cursor_x = cur_line->previous->last_x;
             cur_line = cur_line->previous;
@@ -87,9 +94,9 @@ bool control_char(char c){
         else if (cursor_x > 0){ 
 
           put_blank(cursor_y, cursor_x);
-          cursor_x--;
-         
+          cursor_x--;  
         }
+        
         //put_blank(cursor_y, cursor_x + 1);
                    
         return true;
@@ -108,7 +115,10 @@ void put_char(char c){
   char* vga_at = vga + (cursor_y * 80 + cursor_x ) * 2;
   vga_at[0] = c;
   vga_at[1] = 0x0F;
-  cur_line->str[cursor_x] = c;
+  
+  cur_line->str[cursor_x] =  c ;
+  last_cursor_x = cursor_x + 1;
+  last_cursor_y = cursor_y;
   cursor_x++;
 }
 
@@ -121,14 +131,19 @@ void type_writer(){
       count = 0;
   }
 
-  if (cur_visible) {
-      put_char('_');
-      cursor_x--;
+  char *vga_at = vga + (cursor_y * 80 + cursor_x) * 2;
+
+   if (cur_visible) {
+      vga_at[0] = '_';
+      vga_at[1] = 0x0F ;
   }else {
-      put_blank(cursor_y , cursor_x );
+      vga_at[0] = ' ';
+      vga_at[1] = 0 ;      
   }
-         
-    
+
+  if (last_cursor_y != cursor_y) {
+      put_blank(last_cursor_y, last_cursor_x);
+  }
 }
 
 
@@ -139,12 +154,6 @@ void put_char_at(char c,int x , int y){
     char* vga_at = vga + ( y * 80 + x) * 2;
     vga_at[0] = c;
     vga_at[1] = 0x0F;
-  
-      
-    if (cursor_x >= 80 ){ 
-            cursor_y++;
-            cursor_x = 0;
-    }
 
 }
 
