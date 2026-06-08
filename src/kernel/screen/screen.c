@@ -8,9 +8,11 @@ int cursor_x = 0;
 int cursor_y = 0;
 static int blinking = 50000;
 static int count = 0;
-static bool cur_visible = true;
 static int last_cursor_x = 0;
 static int last_cursor_y = 0;
+
+static bool cur_visible = true;
+static bool in_clear = false;
 // static bool is_newline = false;
 //bool cur_moving = true;
 Line lines[MAX_LINES];  
@@ -48,8 +50,9 @@ void put_blank( int row , int column){
 }
 
 void run_cmd(char* str){
-  if(mystrcmp(str, "clear\n") == 0 ){
+  if(mystrcmp(str, "clear") == 0 ){
     clear_screen();
+    in_clear = true;
   }
 }
 
@@ -70,8 +73,10 @@ bool control_char(char c){
 
  switch (c) {
       case '\n':
-        //run_cmd(cur_line->str);
+        run_cmd(cur_line->str);
         on_newline();
+        if (in_clear) cursor_y--;
+        in_clear = false;
         put_blank(last_cursor_x, last_cursor_y);
         return true;
       case '\t':
@@ -190,7 +195,7 @@ void print_color(char c , char color){
   cursor_x++;
 }
 void clear_screen(){
-  
+    //in_clear = true;
     for(int i = 0 ; i < 24 ; i++ ){
       for (int j = 0; j < 80 ; j++) {
         put_blank(i, j);          
