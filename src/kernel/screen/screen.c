@@ -38,6 +38,7 @@ void init_lines(){
      lines[i].last_x = 0;
      lines[i].line_number = i;
      lines[i].previous = ( i > 0) ? &lines[i - 1] : NULL;
+     lines[i].str[0] = '\0';
   }
   cur_line = &lines[0];
 }
@@ -52,8 +53,11 @@ void put_blank( int row , int column){
 bool run_cmd(char* str){
   if(mystrcmp(str, "clear") == 0 ){
     clear_screen();
-    // in_clear = true;
+    init_lines();
     return true;
+  }else if (contains(str, "echo")) {
+       //print("echo exist!!");
+       return true;
   }
  return false;
 }
@@ -128,6 +132,7 @@ void put_char(char c){
   last_cursor_x = cursor_x + 1;
   last_cursor_y = cursor_y;
   cursor_x++;
+  cur_line->str[cursor_x] = '\0';
 }
 
 void type_writer(){  

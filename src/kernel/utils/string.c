@@ -1,4 +1,5 @@
 #include "string.h"
+#include <stdbool.h>
 
 int mystrcmp(const char *s1, const char *s2){
   while (*s1 && *s2 && *s1 == *s2) {
@@ -6,6 +7,15 @@ int mystrcmp(const char *s1, const char *s2){
       s2++;
   }
   return  *s1 - *s2;
+}
+
+int mystrncmp(const char *s1, const char *s2, int n){
+
+   for(int i = 0 ; i < n ; i++){
+      if (s1[i] != s2[i]) return 1;
+      if (s1[i] == '\0') return 0;
+   }
+  return  0;
 }
 
 int mystrlen(char *str){
@@ -26,4 +36,15 @@ char* rmlast(char *str){
   }
 
   return  str2;
+} 
+
+bool contains(char *target , char *search){
+  int target_len = mystrlen(target);
+  int search_len = mystrlen(search);
+
+  for (int i = 0 ; i <= target_len - search_len; i++) {
+     if (mystrncmp(&target[i], search, search_len) == 0) return  true; 
+  }
+  return false;
 }
+
