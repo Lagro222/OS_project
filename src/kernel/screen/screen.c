@@ -50,18 +50,6 @@ void put_blank( int row , int column){
     vga_at[1] = 0 ; 
 }
 
-bool run_cmd(char* str){
-  if(mystrcmp(str, "clear") == 0 ){
-    clear_screen();
-    init_lines();
-    return true;
-  }else if (contains(str, "echo")) {
-       //print("echo exist!!");
-       return true;
-  }
- return false;
-}
-
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next <= MAX_LINES) {
@@ -73,6 +61,21 @@ void on_newline(){
         cursor_x = 0;
     }
 
+}
+
+bool run_cmd(char* str){
+  
+  if(mystrcmp(str, "clear") == 0 ){
+    clear_screen();
+    init_lines();
+    return true;
+  }else if (mystrncmp(str, "echo ", 5) == 0) {
+        on_newline();
+        print(&str[5]);
+        on_newline();
+        return true;
+  }
+ return false;
 }
 
 bool control_char(char c){

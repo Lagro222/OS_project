@@ -20,7 +20,9 @@ int mystrncmp(const char *s1, const char *s2, int n){
 
 int mystrlen(char *str){
   int i = 0;
-  while(*str != '\0'){
+  int count = 0;
+  while(str[i] != '\0'){
+    count++;
     i++;
   }
   return i;
