@@ -74,6 +74,10 @@ bool run_cmd(char* str){
         print(&str[5]);
         on_newline();
         return true;
+  }else if (mystrcmp(str, "help") == 0) {
+      on_newline();
+      print("help // commands : clear / echo 'string' / help\n");
+      return true;
   }
  return false;
 }
