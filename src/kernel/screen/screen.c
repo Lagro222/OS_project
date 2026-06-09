@@ -20,7 +20,7 @@ Line *cur_line ;
 
 void init_print(){
      
-  for (int i = 0; i < 25; i++) {
+  for (int i = 0; i < MAX_LINES; i++) {
       char* line_pos = vga + ( i * 80 * 2 );
       if( line_pos[0] == ' ' || line_pos[1] == 0 ){
         cursor_y = i ;
@@ -52,7 +52,7 @@ void put_blank( int row , int column){
 
 void on_newline(){
     int next = cur_line->line_number + 1;
-    if ( next <= MAX_LINES) {
+    if ( next < MAX_LINES) {
        //is_newline = true;
         cur_line->last_x = cursor_x;
         //cur_line->previous = &lines[cur_line->line_number];
@@ -83,7 +83,7 @@ bool run_cmd(char* str){
 }
 
 bool control_char(char c){
-
+     
  switch (c) {
       case '\n':
         // run_cmd(cur_line->str);
@@ -122,7 +122,9 @@ bool control_char(char c){
       default:
         return false;
     }
-    
+ 
+//print_string_position("lagro->", cursor_y, 0);
+
 }
 
 
@@ -169,8 +171,7 @@ void type_writer(){
 
 void put_char_at(char c,int x , int y){
     
-    if(control_char(c)) return;
-    
+    //if(control_char(c)) return;
     char* vga_at = vga + ( y * 80 + x) * 2;
     vga_at[0] = c;
     vga_at[1] = 0x0F;
@@ -182,11 +183,11 @@ bool is_clear(char* vga_at){
   return false;
 }
 
-void print_string_position(char* str,Cursor_Pos cur_pos){
+void print_string_position(char* str,int row , int column){
   int i = 0;
    
   while (str[i] != '\0') {
-      put_char_at(str[i], cur_pos.x , cur_pos.y );
+      put_char_at(str[i], column + i,row  );
       i++;
   }
 }
@@ -211,7 +212,7 @@ void print_color(char c , char color){
 }
 void clear_screen(){
     //in_clear = true;
-    for(int i = 0 ; i < 24 ; i++ ){
+    for(int i = 0 ; i < MAX_LINES; i++ ){
       for (int j = 0; j < 80 ; j++) {
         put_blank(i, j);          
       }

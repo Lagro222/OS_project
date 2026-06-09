@@ -32,7 +32,7 @@ void type_writer();
 //STRING PRITING
 void print(char* vga);
 void print_at(char* vga, int row , int col);
-void print_string_position(char* str,Cursor_Pos cur_pos);
+void print_string_position(char* str,int row , int column);
 
 //CHARACTER PUTS
 void put_char(char c);
