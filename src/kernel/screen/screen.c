@@ -3,9 +3,11 @@
 #include <stddef.h>
 #include "../utils/string.h"
 char* vga = (char*)0xB8000 ;
+
 int current_line = 0;
 int cursor_x = 0;
 int cursor_y = 0;
+
 static int blinking = 50000;
 static int count = 0;
 static int last_cursor_x = 0;
@@ -13,8 +15,7 @@ static int last_cursor_y = 0;
 
 static bool cur_visible = true;
 static bool in_clear = false;
-// static bool is_newline = false;
-//bool cur_moving = true;
+
 Line lines[MAX_LINES];  
 Line *cur_line ;
 
@@ -53,12 +54,15 @@ void put_blank( int row , int column){
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next < MAX_LINES) {
-       //is_newline = true;
+
         cur_line->last_x = cursor_x;
-        //cur_line->previous = &lines[cur_line->line_number];
-        cur_line  = &lines[next]; 
+        if (cur_line->last_x == 0) {
+          put_blank(last_cursor_y,  last_cursor_x);
+        }
+        cur_line  = &lines[next];
         cursor_y++;
         cursor_x = 0;
+        //print_string_position("is here", cursor_y, cursor_x);
     }
 
 }
@@ -86,12 +90,11 @@ bool control_char(char c){
      
  switch (c) {
       case '\n':
-        // run_cmd(cur_line->str);
-        // on_newline();
-        // if (in_clear) cursor_y--;
-        // in_clear = false;
+        last_cursor_x = cursor_x;
+        last_cursor_y = cursor_y;
         if (!run_cmd(cur_line->str)) on_newline();
-        put_blank(last_cursor_x, last_cursor_y);
+       
+        put_blank(last_cursor_y, last_cursor_x);
         return true;
       case '\t':
           cursor_x += 4;
