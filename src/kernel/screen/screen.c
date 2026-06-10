@@ -54,15 +54,11 @@ void put_blank( int row , int column){
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next < MAX_LINES) {
-
-        cur_line->last_x = cursor_x;
-        if (cur_line->last_x == 0) {
-          put_blank(last_cursor_y,  last_cursor_x);
-        }
-        cur_line  = &lines[next];
-        cursor_y++;
-        cursor_x = 0;
-        //print_string_position("is here", cursor_y, cursor_x);
+      put_blank(last_cursor_y,  last_cursor_x); 
+      cur_line->last_x = cursor_x;
+      cur_line  = &lines[next];
+      cursor_y++;
+      cursor_x = 0;
     }
 
 }
@@ -94,7 +90,7 @@ bool control_char(char c){
         last_cursor_y = cursor_y;
         if (!run_cmd(cur_line->str)) on_newline();
        
-        put_blank(last_cursor_y, last_cursor_x);
+        //put_blank(last_cursor_y, last_cursor_x);
         return true;
       case '\t':
           cursor_x += 4;
@@ -119,14 +115,11 @@ bool control_char(char c){
           cursor_x--;  
         }
         
-        //put_blank(cursor_y, cursor_x + 1);
                    
         return true;
       default:
         return false;
     }
- 
-//print_string_position("lagro->", cursor_y, 0);
 
 }
 
