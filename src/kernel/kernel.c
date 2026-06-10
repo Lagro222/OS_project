@@ -18,6 +18,7 @@ extern void kernel_main(){
   // put_char('\n');
   // put_char('T');
   clear_screen();
+  print("lagros=>");
   while (1) {
 
     char c = read_key();

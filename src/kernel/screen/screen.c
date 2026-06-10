@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include "../utils/string.h"
 char* vga = (char*)0xB8000 ;
+char *lagro = "lagros=>";
 
 int current_line = 0;
 int cursor_x = 0;
@@ -15,6 +16,7 @@ static int last_cursor_y = 0;
 
 static bool cur_visible = true;
 static bool in_clear = false;
+static bool is_printing = true;
 
 Line lines[MAX_LINES];  
 Line *cur_line ;
@@ -29,6 +31,7 @@ void init_print(){
       }
       
   }
+  cursor_x = mystrlen(lagro);
   cursor_y = 0 ;
 
 }
@@ -36,7 +39,7 @@ void init_print(){
 void init_lines(){
       
   for (int i = 0; i < MAX_LINES ; i++) {
-     lines[i].last_x = 0;
+     lines[i].last_x = mystrlen(lagro);
      lines[i].line_number = i;
      lines[i].previous = ( i > 0) ? &lines[i - 1] : NULL;
      lines[i].str[0] = '\0';
@@ -54,11 +57,13 @@ void put_blank( int row , int column){
 void on_newline(){
     int next = cur_line->line_number + 1;
     if ( next < MAX_LINES) {
+     
       put_blank(last_cursor_y,  last_cursor_x); 
       cur_line->last_x = cursor_x;
       cur_line  = &lines[next];
       cursor_y++;
       cursor_x = 0;
+      //print(lagro);
     }
 
 }
@@ -68,13 +73,17 @@ bool run_cmd(char* str){
   if(mystrcmp(str, "clear") == 0 ){
     clear_screen();
     init_lines();
+    is_printing = true;
     return true;
   }else if (mystrncmp(str, "echo ", 5) == 0) {
+        is_printing = false;
         on_newline();
         print(&str[5]);
         on_newline();
+        is_printing = true;
         return true;
   }else if (mystrcmp(str, "help") == 0) {
+      is_printing = false;
       on_newline();
       print("help // commands : clear / echo 'string' / help\n");
       return true;
@@ -83,13 +92,15 @@ bool run_cmd(char* str){
 }
 
 bool control_char(char c){
-     
+ // print("lagros=>");    
  switch (c) {
       case '\n':
+
         last_cursor_x = cursor_x;
         last_cursor_y = cursor_y;
-        if (!run_cmd(cur_line->str)) on_newline();
-       
+        if (!run_cmd(&cur_line->str[mystrlen(lagro)])) on_newline();
+        if (is_printing) print(lagro);
+        is_printing = true;
         //put_blank(last_cursor_y, last_cursor_x);
         return true;
       case '\t':
@@ -99,8 +110,8 @@ bool control_char(char c){
         cursor_x = 0;
         return true;
       case '\b':
-        
-        if (cursor_x == 0 && cursor_y == 0) return true; 
+           
+        if (cursor_x == mystrlen(lagro)) return true; 
 
         if(cursor_x == 0 && cur_line->previous != NULL){
             put_blank(cursor_y, cursor_x);
@@ -214,6 +225,5 @@ void clear_screen(){
       }
     }
     cursor_x = 0 ;
-    cursor_y = 0 ;
-    
+    cursor_y = 0 ;   
 }
