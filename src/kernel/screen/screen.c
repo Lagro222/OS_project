@@ -93,6 +93,12 @@ bool run_cmd(char* str){
     print("lagro OS version 0.0.1\n");
     return  true;
 
+  }else if (mystrcmp(str, "about") == 0 ) {
+    is_printing = false;
+    on_newline();
+    print("lagro Os an OS from scratch i created for fun\n");
+    return true;
+  
   }
  return false;
 }
