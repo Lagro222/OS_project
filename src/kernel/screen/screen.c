@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "../utils/string.h"
+
 char* vga = (char*)0xB8000 ;
 char *lagro = "lagros=>";
 
@@ -79,9 +80,7 @@ bool run_cmd(char* str){
   }else if (mystrncmp(str, "echo ", 5) == 0) {
         is_printing = false;
         on_newline();
-        print(&str[5]);
-        put_char('\n');
-        // is_printing = true;
+        myprintf("%s\n",&str[5]);
         return true;
   }else if (mystrcmp(str, "help") == 0) {
       is_printing = false;
@@ -220,10 +219,19 @@ void print(const char *str){
             i++;
        }
 }
-// void print_number(int number){
-//
-//
-// }
+void print_number(int number){
+     static char str[20];
+    str[0] = '\0';
+    while (number > 0) {
+        int n = number % 10 ;
+        const char c = '0' + n;
+        add_last(str, c);
+        number /= 10;
+    }
+    // char *reversed_str = reverse_string((char*)str);
+    // print(reversed_str);
+    print(reverse_string(str));
+}
 void print_color(char c , char color){
   char *vga_target = vga + (cursor_y * 80 + cursor_x)*2;
   vga_target[0] = c;

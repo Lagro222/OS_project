@@ -38,6 +38,5 @@ void myprintf(const char *vga,...);
 void put_char(char c);
 void put_char_at(char c, int x , int y);
 void print_color(char c , char color);
-
-
+void print_number(int number);
 #endif

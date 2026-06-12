@@ -16,8 +16,9 @@ extern void kernel_main(){
    //print("\ttesting\nnew put_char");
   // put_char('I');
   // put_char('\n');
-  // put_char('T');
+  // put_char('T'); 
   clear_screen();
+ print_number(1234);
   print("lagros=>");
   while (1) {
 
