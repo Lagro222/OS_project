@@ -25,7 +25,7 @@ int mystrlen(const char *str){
     count++;
     i++;
   }
-  return i;
+  return count;
 }
 
 char* rmlast(char *str){
@@ -50,3 +50,21 @@ bool contains(const char *target ,const char *search){
   return false;
 }
 
+void add_last(char *str, const char c){
+  int i = 0;
+  while (str[i] != '\0') {
+    i++;
+  }
+  str[i] = c;
+  str[i+1] = '\0';
+}
+
+char *reverse_string( char *str){
+      int len = mystrlen(str);
+      static char str_end[20];
+      str_end[0] = '\0';
+      for(int i = len - 1  ; i >= 0 ; i--){
+        add_last(str_end, str[i]);
+      }
+      return str_end;
+}
