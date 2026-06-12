@@ -79,14 +79,20 @@ bool run_cmd(char* str){
         is_printing = false;
         on_newline();
         print(&str[5]);
-        on_newline();
-        is_printing = true;
+        put_char('\n');
+        // is_printing = true;
         return true;
   }else if (mystrcmp(str, "help") == 0) {
       is_printing = false;
       on_newline();
       print("help // commands : clear / echo 'string' / help\n");
       return true;
+  }else if (mystrcmp(str, "version") == 0) {
+    is_printing = false;
+    on_newline();
+    print("lagro OS version 0.0.1\n");
+    return  true;
+
   }
  return false;
 }
