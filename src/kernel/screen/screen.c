@@ -1,4 +1,5 @@
 #include "screen.h"
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include "../utils/string.h"
@@ -212,7 +213,7 @@ void print_string_position(char* str,int row , int column){
 }
 
 
-void print(char *str){
+void print(const char *str){
        int i = 0;
        while (str[i] != '\0') {
             put_char(str[i]);
@@ -228,6 +229,24 @@ void print_color(char c , char color){
   vga_target[0] = c;
   vga_target[1] = color;
   cursor_x++;
+}
+void myprintf(const char *str,...){
+  va_list list;
+  va_start(list, str);
+  for ( int i = 0 ; i < mystrlen(str); i++) {
+    if (str[i] == '%') {
+    
+       if ( str[i+1] == 's')  {
+          print(va_arg(list,char *));
+          i++;
+      }else if (str[i+1] == 'c') {
+        put_char((const char)va_arg(list, int ));
+        i++;
+      }
+     }else put_char(str[i]);
+  }
+  va_end(list);
+
 }
 void clear_screen(){
     //in_clear = true;

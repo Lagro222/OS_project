@@ -30,10 +30,10 @@ bool run_cmd(char* str);
 void clear_screen();
 void type_writer();
 //STRING PRITING
-void print(char* vga);
+void print(const char* vga);
 void print_at(char* vga, int row , int col);
 void print_string_position(char* str,int row , int column);
-
+void myprintf(const char *vga,...);
 //CHARACTER PUTS
 void put_char(char c);
 void put_char_at(char c, int x , int y);
