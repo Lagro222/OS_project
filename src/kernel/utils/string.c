@@ -18,7 +18,7 @@ int mystrncmp(const char *s1, const char *s2, int n){
   return  0;
 }
 
-int mystrlen(char *str){
+int mystrlen(const char *str){
   int i = 0;
   int count = 0;
   while(str[i] != '\0'){
@@ -40,7 +40,7 @@ char* rmlast(char *str){
   return  str2;
 } 
 
-bool contains(char *target , char *search){
+bool contains(const char *target ,const char *search){
   int target_len = mystrlen(target);
   int search_len = mystrlen(search);
 

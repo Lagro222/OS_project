@@ -4,9 +4,9 @@
 #include <stdbool.h>
 
 int mystrcmp(const char *s1, const char *s2);
-int mystrlen(char *str);
+int mystrlen(const char *str);
 int mystrncmp(const char *s1 , const char *s2, int n);
 char* rmlast(char *str);
-bool contains(char *target , char* search);
+bool contains(const char *target , const char* search);
 
 #endif // !STRING_H
